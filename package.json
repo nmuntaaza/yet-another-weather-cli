@@ -1,0 +1,19 @@
+{
+  "name": "weather-cli",
+  "version": "1.0.0",
+  "description": "Weather app",
+  "main": "index.js",
+  "author": "nmuntaaza (nmuntaaza.wh@gmail.com)",
+  "license": "MIT",
+  "bin": {
+    "weather": "./index.js"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "chalk": "^3.0.0",
+    "cli-table3": "^0.5.1",
+    "conf": "^6.2.0",
+    "esm": "^3.2.25",
+    "minimist": "^1.2.0"
+  }
+}
