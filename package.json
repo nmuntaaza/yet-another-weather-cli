@@ -1,7 +1,7 @@
 {
-  "name": "weather-cli",
-  "version": "1.0.0",
-  "description": "Weather app",
+  "name": "yet-another-weather-cli",
+  "version": "1.0.1",
+  "description": "Weather app. For fun project",
   "main": "index.js",
   "author": "nmuntaaza (nmuntaaza.wh@gmail.com)",
   "license": "MIT",
@@ -14,6 +14,7 @@
     "cli-table3": "^0.5.1",
     "conf": "^6.2.0",
     "esm": "^3.2.25",
+    "http-status": "^1.4.2",
     "minimist": "^1.2.0"
   }
 }
