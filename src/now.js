@@ -39,9 +39,9 @@ export async function now(args) {
     return;
   }
 
-  let errMessage = `${chalk.redBright('This option value is not valid:\n')}`;
+  let errMessage = `${chalk.redBright('\n  This option value is not valid:\n')}`;
   if (!apiKeyValidation) errMessage += `${chalk.redBright('  --apiKey')}: ${apiKeyValidationText}\n`;
   if (!cityNameValidation) errMessage += `${chalk.redBright('  --cityName')}: ${cityNameValidationText}\n`;
   if (!unitsValidation) errMessage += `${chalk.redBright('  --units')}: ${unitsValidationText}\n`;
-  console.error(errMessage.trim());
+  console.error(errMessage);
 }

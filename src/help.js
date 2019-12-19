@@ -10,7 +10,7 @@ const menus = {
     ${chalk.blueBright('version')} ............ show package version
   `,
   now: `
-  ${chalk.greenBright('usage: weather now <options>')}
+  ${chalk.blueBright('usage: weather now <options>')}
 
   options:
     --cityName: what city you want to know
@@ -22,7 +22,7 @@ const menus = {
   See also: weather help config.
   `,
   forecast: `
-  ${chalk.greenBright('usage: weather forecast <options>')}
+  ${chalk.blueBright('usage: weather forecast <options>')}
 
   options:
     --cityName: city you want to know the weather
@@ -35,16 +35,17 @@ const menus = {
   See also: weather help config.
   `,
   version: `
-  ${chalk.greenBright('usage: weather forecast <options>')}
+  ${chalk.blueBright('usage: weather forecast <options>')}
 
   show weather cli version app
   `,
   config: `
-  ${chalk.greenBright('usage: weather config <options>')}
+  ${chalk.blueBright('usage: weather config <options>')}
 
   options:
     --cityName: city you want to know the weather
     --units: is the units you want, metric for 'celcius' and 'imperial' for fahrenheit
+        metric will be used if not defined
     --apiKey: apiKey from https://openweathermap.org/. Sign in to get your apiKey
 
   this command will save your setting to config file in your account folder
@@ -56,8 +57,8 @@ const menus = {
 }
 
 export async function help(args) {
-  const subCmd = args._[0] === 'help'
+  const subCmd = args._[1]
     ? args._[1]
-    : args._[0];
-  console.log(menus[subCmd] || menus.main);
+    : 'main';
+  console.log(menus[subCmd]);
 }
