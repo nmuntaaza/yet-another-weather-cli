@@ -8,6 +8,11 @@ export async function configure(args) {
   let currentConfigObject = config.get(configKey);
   currentConfigObject = currentConfigObject || {};
 
+  if (!(args.apiKey || args.cityName || args.units)) {
+    console.log(currentConfigObject);
+    return;
+  }
+
   let apiKey = args.apiKey;
   if (!apiKey) {
     apiKey = currentConfigObject.apiKey;

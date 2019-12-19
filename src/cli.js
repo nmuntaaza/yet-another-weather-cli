@@ -24,7 +24,7 @@ export async function cli(argsArray) {
     case 'help':
       help(args);
       break;
-    case 'configure':
+    case 'config':
       configure(args);
       break;
     case 'now':
