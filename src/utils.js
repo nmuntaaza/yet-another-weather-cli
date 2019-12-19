@@ -19,13 +19,17 @@ export async function queryWeatherForecast(cityName, units, apiKey) {
 }
 
 export function validateApiKey(apiKey) {
-  return (apiKey != null
-    && apiKey.length == 32
-  );
+  if (apiKey != null && apiKey.length == 32) {
+    return [true, ''];
+  }
+  return [false, 'must be not null and the length is 32'];
 }
 
 export function validateCityName(cityName) {
-  return (cityName != null);
+  if (cityName != null && cityName.length > 0) {
+    return [true, ''];
+  }
+  return [false, 'must be not null and the cityName string length is more than 0'];
 }
 
 export function validateUnits(units) {
@@ -33,7 +37,10 @@ export function validateUnits(units) {
     metric: 'metric',
     imperial: 'imperial'
   }
-  return (unitsList[units] != null);
+  if (unitsList[units] != null) {
+    return [true, ''];
+  }
+  return [false, 'must be imperial or metric'];
 }
 
 function getApiUrl(baseUri, cityName, units, apiKey) {

@@ -5,37 +5,29 @@ export const configKey = 'weather-cli';
 
 export async function configure(args) {
   const config = new Conf();
-  let currentConfigObject = config.get(configKey);
-  currentConfigObject = currentConfigObject || {};
+  const currentConfigObject = config.get(configKey) || {};
 
   if (!(args.apiKey || args.cityName || args.units)) {
     console.log(currentConfigObject);
     return;
   }
 
-  let apiKey = args.apiKey;
-  if (!apiKey) {
-    apiKey = currentConfigObject.apiKey;
-  }
-  if (!validateApiKey(apiKey)) {
+  const apiKey = args.apiKey || currentConfigObject.apiKey;
+  const cityName = args.cityName || currentConfigObject.cityName;
+  const units = args.units || currentConfigObject.units || 'metric'; // We set default units if not defined
+
+  const [apiKeyValidation, apiKeyValidationText] = validateApiKey(apiKey);
+  const [cityNameValidation, cityNameValidationText] = validateCityName(cityName);
+  const [unitsValidation, unitsValidationText] = validateUnits(units);
+
+  if (apiKeyValidation, cityNameValidation, unitsValidation) {
+    config.set(configKey, { apiKey, cityName, units });
     return;
   }
 
-  let cityName = args.cityName;
-  if (!cityName) {
-    cityName = currentConfigObject.cityName;
-  }
-  if (!validateCityName(cityName)) {
-    return;
-  }
-
-  let units = args.units;
-  if (!units) {
-    units = currentConfigObject.units ? currentConfigObject.units : 'metric';
-  }
-  if (!validateUnits(units)) {
-    return;
-  }
-
-  config.set(configKey, { apiKey, cityName, units });
+  let errMessage = `${chalk.redBright('This option value is not valid:\n')}`;
+  if (!apiKeyValidation) errMessage += `${chalk.redBright('  --apiKey')}: ${apiKeyValidationText}\n`;
+  if (!cityNameValidation) errMessage += `${chalk.redBright('  --cityName')}: ${cityNameValidationText}\n`;
+  if (!unitsValidation) errMessage += `${chalk.redBright('  --units')}: ${unitsValidationText}\n`;
+  console.error(errMessage.trim());
 }
