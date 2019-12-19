@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export async function queryCurrentWeather(cityName, units, apiKey) {
-  const baseUri = 'http://api.openweathermap.org/data/2.5/weather';
+  const baseUri = 'https://api.openweathermap.org/data/2.5/weather';
   const url = getApiUrl(baseUri, cityName, units, apiKey);
   return await axios({
     method: 'GET',
@@ -10,7 +10,7 @@ export async function queryCurrentWeather(cityName, units, apiKey) {
 }
 
 export async function queryWeatherForecast(cityName, units, apiKey) {
-  const baseUri = 'http://api.openweathermap.org/data/2.5/forecast';
+  const baseUri = 'https://api.openweathermap.org/data/2.5/forecast';
   const url = getApiUrl(baseUri, cityName, units, apiKey);
   return await axios({
     method: 'GET',

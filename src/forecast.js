@@ -1,14 +1,14 @@
 import Conf from 'conf';
 import Table from 'cli-table3';
-import { configKey } from './configure';
+import { configKey} from './configure';
 import {
   validateApiKey,
   validateCityName,
   validateUnits,
-  queryCurrentWeather
+  queryWeatherForecast
 } from './utils';
 
-export async function now(args) {
+export async function forecast(args) {
   const config = new Conf().get(configKey);
   const apiKey = args.apiKey || config.apiKey;
   if (!validateApiKey(apiKey)) {
@@ -23,8 +23,8 @@ export async function now(args) {
     return;
   }
 
-  const { data } = await queryCurrentWeather(cityName, units, apiKey);
-
+  const { data } = await queryWeatherForecast(cityName, units, apiKey);
+  
   const tempUnits = (units == 'metric') ? '˚C' : '˚F';
   const table = new Table({
     head: ['City', 'DateTime', 'Weather', `Temp(${tempUnits})`],
@@ -32,12 +32,15 @@ export async function now(args) {
     wordWrap: true
   });
 
-  table.push([
-    data.name,
-    new Date(data.dt * 1000).toLocaleString(),
-    data.weather[0].description,
-    data.main.temp
-  ]);
+  const forecastLimit = args.limit ? args.limit : 5;
+  data.list.slice(0, forecastLimit).forEach(forecast => {
+    table.push([
+      cityName,
+      new Date(forecast.dt * 1000).toLocaleString(),
+      forecast.weather[0].description,
+      forecast.main.temp
+    ]);
+  })
 
   console.log(table.toString());
 }

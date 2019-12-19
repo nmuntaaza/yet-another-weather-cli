@@ -3,6 +3,7 @@ import { version } from './version';
 import { help } from './help';
 import { configure } from './configure';
 import { now } from './now';
+import { forecast } from './forecast';
 
 export async function cli(argsArray) {
   const args = minimist(argsArray.slice(2));
@@ -28,6 +29,9 @@ export async function cli(argsArray) {
       break;
     case 'now':
       now(args);
+      break;
+    case 'forecast':
+      forecast(args);
       break;
     default:
       console.error(
