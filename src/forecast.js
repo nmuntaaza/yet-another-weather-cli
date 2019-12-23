@@ -1,6 +1,6 @@
 import Conf from 'conf';
 import Table from 'cli-table3';
-import { configKey} from './configure';
+import { configKey} from './config';
 import httpStatus from 'http-status';
 import {
   validateApiKey,
@@ -20,46 +20,53 @@ export async function forecast(args) {
   const [cityNameValidation, cityNameValidationText] = validateCityName(cityName);
   const [unitsValidation, unitsValidationText] = validateUnits(units);
 
-  if (apiKeyValidation && cityNameValidation && unitsValidation) {
-    try {
-      const { data } = await queryWeatherForecast(cityName, units, apiKey);
-      const tempUnits = (units == 'metric') ? '˚C' : '˚F';
-      const table = new Table({
-        head: ['City', 'DateTime', 'Weather', `Temp(${tempUnits})`],
-        colWidths: [25, 23, 18, 12],
-        wordWrap: true
-      });
-
-      const forecastLimit = args.limit ? args.limit : 5;
-      data.list.slice(0, forecastLimit).forEach(forecast => {
-        table.push([
-          cityName,
-          new Date(forecast.dt * 1000).toLocaleString(),
-          forecast.weather[0].description,
-          forecast.main.temp
-        ]);
-      })
-
-      console.log(table.toString());
-      return;
-    } catch (err) {
-      if (err.isAxiosError) {
-        if (err.response.status == httpStatus.NOT_FOUND) {
-          console.error(`${chalk.redBright('\n  City is not found\n')}`);
-        }
-        if (err.response.status == httpStatus.UNAUTHORIZED) {
-          console.error(`${chalk.redBright('\n  apiKey is invalid probably expired. Unauthorized\n')}`);
-        }
-      } else {
-        console.error(`${chalk.redBright('\n  Error is happened\n')}`);
-      } 
-    }
-  } else {
+  if (!apiKeyValidation || !cityNameValidation || !unitsValidation) {
     let errMessage = `${chalk.redBright('\n  This option value is not valid:\n')}`;
-    if (!apiKeyValidation) errMessage += `${chalk.redBright('  --apiKey')}: ${apiKeyValidationText}\n`;
-    if (!cityNameValidation) errMessage += `${chalk.redBright('  --cityName')}: ${cityNameValidationText}\n`;
-    if (!unitsValidation) errMessage += `${chalk.redBright('  --units')}: ${unitsValidationText}\n`;
-    console.error(errMessage);
+    if (!apiKeyValidation) errMessage += `\t${apiKeyValidationText}\n`;
+    if (!cityNameValidation) errMessage += `\t${cityNameValidationText}\n`;
+    if (!unitsValidation) errMessage += `\t${unitsValidationText}\n`;
+
+    return console.error(errMessage);
   }
-  return;
+
+  try {
+    const { data } = await queryWeatherForecast(cityName, units, apiKey);
+    const tempUnits = (units == 'metric') ? '˚C' : '˚F';
+    const table = new Table({
+      head: ['City', 'DateTime', 'Weather', `Temp(${tempUnits})`],
+      colWidths: [25, 23, 18, 12],
+      wordWrap: true
+    });
+
+    const forecastLimit = args.limit ? args.limit : 5;
+    data.list.slice(0, forecastLimit).forEach(forecast => {
+      table.push([
+        cityName,
+        new Date(forecast.dt * 1000).toLocaleString(),
+        forecast.weather[0].description,
+        forecast.main.temp
+      ]);
+    });
+
+    return console.log(table.toString());
+  } catch (err) {
+    let errorText = '';
+    if (err.isAxiosError) {
+      switch(err.response.status) {
+        case httpStatus.NOT_FOUND:
+          errorText = chalk.redBright('\n  City is not found\n');  
+          break;
+        case httpStatus.UNAUTHORIZED:
+          errorText = chalk.redBright('\n  apiKey is invalid probably expired. Unauthorized\n');
+          break;
+        default:
+          errorText = chalk.redBright('\n  Error on axios\n');
+          break;
+      }
+    } else {
+      errorText = chalk.redBright('\n  Error is happened\n');
+    }
+    
+    return console.error(errorText);
+  }
 }

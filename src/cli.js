@@ -1,21 +1,14 @@
 import minimist from 'minimist';
 import { version } from './version';
 import { help } from './help';
-import { configure } from './configure';
+import { configure } from './config';
 import { now } from './now';
 import { forecast } from './forecast';
+import { add } from './add';
 
 export async function cli(argsArray) {
   const args = minimist(argsArray.slice(2));
   let cmd = args._[0] || 'help';
-
-  if (args.version || args.v) {
-    cmd = 'version';
-  }
-
-  if (args.help || args.h) {
-    cmd = 'help';
-  }
 
   switch (cmd) {
     case 'version':
@@ -32,6 +25,9 @@ export async function cli(argsArray) {
       break;
     case 'forecast':
       forecast(args);
+      break;
+    case 'add':
+      add(args);
       break;
     default:
       console.error(
