@@ -8,7 +8,18 @@ Not knowing the weather can be difficult, for instance when you go outside for e
 
 Sign in to [openweathermap](https://openweathermap.org/) to get the api key.
 
-You can link the app so you can run it from every where
+clone this github or install from npm
+```console
+mkdir yet-another-weather-cli
+npm i yet-another-weather-cli
+```
+
+install dependecy if you clone this github instead using npm
+```console
+npm install
+```
+
+Than link it so you can run it from anywhere
 ```console
 npm link
 ```
